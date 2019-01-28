@@ -35,15 +35,10 @@ open class ScrapingNetworkInterceptor(private val context: Context): Interceptor
         val response = chain.proceed(request)
         val bodyString = response.body()?.string()
 
-        val baseFolder = Utils.getMockCacheDir(context)
-
-        if (baseFolder.exists()) {
-            val mockFile = File(baseFolder, Utils.getMockFileName(request))
-
+        if (Config.recordEnable) {
+            val mockFile = Utils.getMockFile(context, request)
             mockFile.writeText(bodyString ?: "")
             Log.i(tag, "create json mock at ${mockFile.path}")
-        } else {
-            Log.e(tag, "cannot create file at path: ${baseFolder.path}")
         }
 
         return response.newBuilder()

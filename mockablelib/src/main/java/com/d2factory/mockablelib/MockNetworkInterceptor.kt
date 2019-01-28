@@ -8,6 +8,7 @@ import okhttp3.MediaType
 import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.ResponseBody
+import java.io.File
 
 /**
  * MockNetworkInterceptor
@@ -31,33 +32,36 @@ import okhttp3.ResponseBody
  * The MockNetworkInterceptor will try to find the file **GET-_ah-api-user-v1.0-getUser.json** in your app assets folder (app/src/main/assets).
  * If not found, it execute the orginal network call.
  */
-open class MockNetworkInterceptor(private val mContext: Context) : Interceptor {
+open class MockNetworkInterceptor(private val context: Context) : Interceptor {
 
-    private val tag = "MockNetworkInterceptor"
     private val mediaTypeJson = MediaType.parse("application/json")
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
 
-        val fileName = Utils.getMockFileName(request)
+        var json: String? = null
 
-        try {
-            val json = mContext.assets.open("mocks/$fileName").readBytes().toString(Charsets.UTF_8)
+        if (Config.useMockEnable) {
+            kotlin.runCatching {
+                if (Config.autoFetchEnable) {
+                    json = Utils.getMockFile(context, request).readBytes().toString(Charsets.UTF_8)
+                }
 
-            Log.i(tag, "use mock file $fileName")
+                if (json == null) {
+                    json = context.assets.open(Utils.getAssetMockFilePath(context, request)).readBytes().toString(Charsets.UTF_8)
+                }
 
-            return Response.Builder()
-                    .body(ResponseBody.create(mediaTypeJson, json))
-                    .request(chain.request())
-                    .message("")
-                    .protocol(Protocol.HTTP_2)
-                    .code(200)
-                    .build()
-        } catch (ex: Exception) {
-            Log.i(tag, "can't use mock file $fileName")
-
-            return chain.proceed(request)
+                return Response.Builder()
+                        .body(ResponseBody.create(mediaTypeJson, json))
+                        .request(chain.request())
+                        .message("")
+                        .protocol(Protocol.HTTP_2)
+                        .code(200)
+                        .build()
+            }
         }
+
+        return chain.proceed(request)
     }
 }

@@ -6,12 +6,22 @@ import java.io.File
 
 internal object Utils {
 
-    fun getMockCacheDir(context: Context): File {
-        val baseFolderPath = context.cacheDir.path +
+    fun getMockFile(context: Context, request: Request): File {
+        val baseFolder = Utils.getMockDir(context)
+        return File(baseFolder, Utils.getMockFileNameFromRequest(request))
+    }
+
+    fun getAssetMockFilePath(context: Context, request: Request): String {
+        val mockFileName = Utils.getMockFileNameFromRequest(request)
+        return "${Config.bundleName}${Config.mockFolderName}/$mockFileName"
+    }
+
+    private fun getMockDir(context: Context): File {
+        val baseFolderPath = context.filesDir.path +
                 File.separator +
                 context.getString(R.string.app_name) +
                 File.separator +
-                "mocks"
+                Config.bundleMockFolder
 
         val baseFolder = File(baseFolderPath)
 
@@ -21,7 +31,7 @@ internal object Utils {
         return baseFolder
     }
 
-    fun getMockFileName(request: Request): String {
+    fun getMockFileNameFromRequest(request: Request): String {
         val pathSegments = request.url().pathSegments()
         val httpMethod = request.method()
 
