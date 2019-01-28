@@ -2,19 +2,17 @@ package com.d2factory.mockablelib
 
 import android.content.Context
 import android.util.Log
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.ResponseBody
 
-open class OfflineMockInterceptor(private val mContext: Context) : Interceptor {
+open class MockNetworkInterceptor(private val mContext: Context) : Interceptor {
 
-    private val MEDIA_JSON = MediaType.parse("application/json")
+    private val tag = "MockNetworkInterceptor"
+    private val mediaTypeJson = MediaType.parse("application/json")
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -25,17 +23,17 @@ open class OfflineMockInterceptor(private val mContext: Context) : Interceptor {
         try {
             val json = mContext.assets.open("mocks/$fileName").readBytes().toString(Charsets.UTF_8)
 
-            Log.i("OfflineMockInterceptor", "use mock file $fileName")
+            Log.i(tag, "use mock file $fileName")
 
             return Response.Builder()
-                    .body(ResponseBody.create(MEDIA_JSON, json))
+                    .body(ResponseBody.create(mediaTypeJson, json))
                     .request(chain.request())
                     .message("")
                     .protocol(Protocol.HTTP_2)
                     .code(200)
                     .build()
         } catch (ex: Exception) {
-            Log.i("OfflineMockInterceptor", "can't use mock file $fileName")
+            Log.i(tag, "can't use mock file $fileName")
 
             return chain.proceed(request)
         }

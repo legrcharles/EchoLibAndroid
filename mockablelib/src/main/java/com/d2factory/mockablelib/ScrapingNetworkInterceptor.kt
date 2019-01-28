@@ -8,7 +8,9 @@ import okhttp3.ResponseBody
 import java.io.File
 
 
-open class MockInterceptor(private val context: Context): Interceptor {
+open class ScrapingNetworkInterceptor(private val context: Context): Interceptor {
+
+    private val tag = "NetworkCallScraping"
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -21,9 +23,9 @@ open class MockInterceptor(private val context: Context): Interceptor {
             val mockFile = File(baseFolder, Utils.getMockFileName(request))
 
             mockFile.writeText(bodyString ?: "")
-            Log.i("MockInterceptor", "create json mock at ${mockFile.path}")
+            Log.i(tag, "create json mock at ${mockFile.path}")
         } else {
-            Log.e("MockInterceptor", "cannot create file at path: ${baseFolder.path}")
+            Log.e(tag, "cannot create file at path: ${baseFolder.path}")
         }
 
         return response.newBuilder()
