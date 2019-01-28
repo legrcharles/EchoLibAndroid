@@ -5,23 +5,12 @@ import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.ResponseBody
-import java.io.File
 
 /**
  * ScrapingNetworkInterceptor
  * Add **ScrapingNetworkInterceptor** once to your OkHttpClient.Builder when you build your retrofit API.
- * Or you can create in each productFlavor a boolean to record mocks:
  *
- * <pre>{@code
- * buildConfigField "boolean", "RECORD_MOCKS", "true"
- *
- * if (BuildConfig.RECORD_MOCKS) {
- *      okHttpBuilder.addInterceptor(new ScrapingNetworkInterceptor(ApplicationContext));
- * }
- * }
- * </pre>
- *
- * And then just go everywhere in app to call every WS, this will save every call of WS in Json file to your device app cache folder.
+ * And then just go everywhere in app to call every WS, this will save every call of WS in Json file to your device app files folder.
  *
  * You can find and export all mocks files by exporting device folders
  * Then to use mock BuildVariant copy mocks folder to app assets folder

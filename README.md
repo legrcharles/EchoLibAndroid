@@ -18,18 +18,22 @@ implementation project(':mockablelib')
 
 ## How to Use ?
 
+Config the lib
+==============
+```
+Config.INSTANCE.setup(
+    BuildConfig.RECORD_MOCKS,
+    BuildConfig.FLAVOR.equals("mock"),
+    ""
+);
+```
+
 mock WS with json files
 =======================
 
 Create productFlavor named **mock**
 
 Add interceptor to your OkHttpClient.Builder when you build your retrofit API.
-
-```
-if (BuildConfig.FLAVOR.equals("mock")) {
-    okHttpBuilder.addInterceptor(new MockNetworkInterceptor(ApplicationContext));
-}
-```
 
 Then when you use the application with build Variant mock and you use for example the WS declared like that in the ApiService of retrofit :
 ```
@@ -44,15 +48,6 @@ generate Json file
 ==================
 
 Add **ScrapingNetworkInterceptor** once to your OkHttpClient.Builder when you build your retrofit API.
-Or you can create in each productFlavor a boolean to record mocks:
-
-```buildConfigField "boolean", "RECORD_MOCKS", "true"```
-
-```
-if (BuildConfig.RECORD_MOCKS) {
-    okHttpBuilder.addInterceptor(new ScrapingNetworkInterceptor(ApplicationContext));
-}
-```
 
 And then just go everywhere in app to call every WS, this will save every call of WS in Json file to your device app cache folder.
 

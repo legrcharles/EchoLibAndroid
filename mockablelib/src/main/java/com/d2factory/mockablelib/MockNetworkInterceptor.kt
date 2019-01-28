@@ -12,16 +12,8 @@ import java.io.File
 
 /**
  * MockNetworkInterceptor
- * Create productFlavor named **mock**
  *
  * Add interceptor to your OkHttpClient.Builder when you build your retrofit API.
- *
- * <pre>{@code
- * if (BuildConfig.FLAVOR.equals("mock")) {
- *      okHttpBuilder.addInterceptor(new MockNetworkInterceptor(ApplicationContext));
- * }
- * }
- * </pre>
  *
  * Then when you use the application with build Variant mock and you use for example the WS declared like that in the ApiService of retrofit :
  * <pre>{@code
