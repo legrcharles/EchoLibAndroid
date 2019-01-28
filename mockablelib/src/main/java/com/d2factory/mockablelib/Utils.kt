@@ -4,7 +4,7 @@ import android.content.Context
 import okhttp3.Request
 import java.io.File
 
-object Utils {
+internal object Utils {
 
     fun getMockCacheDir(context: Context): File {
         val baseFolderPath = context.cacheDir.path +

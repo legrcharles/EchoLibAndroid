@@ -9,6 +9,28 @@ import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.ResponseBody
 
+/**
+ * MockNetworkInterceptor
+ * Create productFlavor named **mock**
+ *
+ * Add interceptor to your OkHttpClient.Builder when you build your retrofit API.
+ *
+ * <pre>{@code
+ * if (BuildConfig.FLAVOR.equals("mock")) {
+ *      okHttpBuilder.addInterceptor(new MockNetworkInterceptor(ApplicationContext));
+ * }
+ * }
+ * </pre>
+ *
+ * Then when you use the application with build Variant mock and you use for example the WS declared like that in the ApiService of retrofit :
+ * <pre>{@code
+ * @GET("_ah/api/user/v1.0/getUser") Single<UserLoginDto> login(@Query("email") String email);
+ * }
+ * </pre>
+ *
+ * The MockNetworkInterceptor will try to find the file **GET-_ah-api-user-v1.0-getUser.json** in your app assets folder (app/src/main/assets).
+ * If not found, it execute the orginal network call.
+ */
 open class MockNetworkInterceptor(private val mContext: Context) : Interceptor {
 
     private val tag = "MockNetworkInterceptor"
