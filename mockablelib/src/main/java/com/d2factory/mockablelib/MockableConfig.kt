@@ -15,16 +15,17 @@ object MockableConfig {
      * /!\ you can't record and use mock at same times !!!
      */
     fun OkHttpClient.Builder.setupMock(context: Context, bundleName: String = "", recordEnable: Boolean = false, useMockEnable: Boolean = false) {
-        MockableConfig.recordEnable = recordEnable
-        MockableConfig.useMockEnable = useMockEnable
         MockableConfig.bundleName = bundleName
 
-        this.addInterceptor(MockNetworkInterceptor(context))
-        this.addInterceptor(ScrapingNetworkInterceptor(context))
-    }
+        if (useMockEnable && recordEnable) throw Exception("Mockable Lib can't have useMockEnable and recordEnable to true")
 
-    var recordEnable = false // save json file for each networkCall
-    var useMockEnable = false // use json file over each networkCall
+        if(useMockEnable) {
+            this.addInterceptor(MockNetworkInterceptor(context))
+        }
+        if(recordEnable) {
+            this.addInterceptor(ScrapingNetworkInterceptor(context))
+        }
+    }
 
     var mockFolderName = "mock"
 

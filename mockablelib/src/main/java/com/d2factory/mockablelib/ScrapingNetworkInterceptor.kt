@@ -14,7 +14,7 @@ import okhttp3.ResponseBody
  * try to find file named =
  * GET-_ah-api-user-v1.0-getUser.json
  */
-open class ScrapingNetworkInterceptor(private val context: Context): Interceptor {
+open class ScrapingNetworkInterceptor(private val context: Context) : Interceptor {
 
     private val tag = "NetworkCallScraping"
 
@@ -23,11 +23,9 @@ open class ScrapingNetworkInterceptor(private val context: Context): Interceptor
         val response = chain.proceed(request)
         val bodyString = response.body()?.string()
 
-        if (MockableConfig.recordEnable) {
-            val mockFile = Utils.getInternalAppMockFile(context, request)
-            mockFile.writeText(bodyString ?: "")
-            Log.i(tag, "create json mock at ${mockFile.path}")
-        }
+        val mockFile = Utils.getInternalAppMockFile(context, request)
+        mockFile.writeText(bodyString ?: "")
+        Log.i(tag, "create json mock at ${mockFile.path}")
 
         return response.newBuilder()
                 .body(ResponseBody.create(response.body()?.contentType(), bodyString))

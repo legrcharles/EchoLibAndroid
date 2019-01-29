@@ -24,24 +24,23 @@ open class MockNetworkInterceptor(private val context: Context) : Interceptor {
 
         var json: String?
 
-        if (MockableConfig.useMockEnable) {
-            kotlin.runCatching {
+        kotlin.runCatching {
 
-                json = getMockFromAssetsFolder(request)
+            json = getMockFromAssetsFolder(request)
 
-                if (MockableConfig.overrideWithAssetsEnable && json == null) {
-                    json = getMockFromInternalAppFolder(request)
-                }
-
-                return Response.Builder()
-                        .body(ResponseBody.create(mediaTypeJson, json))
-                        .request(chain.request())
-                        .message("")
-                        .protocol(Protocol.HTTP_2)
-                        .code(200)
-                        .build()
+            if (MockableConfig.overrideWithAssetsEnable && json == null) {
+                json = getMockFromInternalAppFolder(request)
             }
+
+            return Response.Builder()
+                    .body(ResponseBody.create(mediaTypeJson, json))
+                    .request(chain.request())
+                    .message("")
+                    .protocol(Protocol.HTTP_2)
+                    .code(200)
+                    .build()
         }
+
 
         return chain.proceed(request)
     }
