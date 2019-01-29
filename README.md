@@ -21,40 +21,47 @@ implementation project(':mockablelib')
 Config the lib
 ==============
 ```
-Config.INSTANCE.setup(
-    BuildConfig.RECORD_MOCKS,
-    BuildConfig.FLAVOR.equals("mock"),
-    ""
-);
+val okHttpBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
+okHttpBuilder.setupMock(applicationContext,
+       "bundleName",
+       true,
+       false);
 ```
 
-mock WS with json files
-=======================
+- param1 : the application context
+- param2 : (default = "") the bundle name => record/read in separate mock folder (for example record json files for user1 in separate bundle named user1 and then user2 in bundle user2, or each Retrofit client can have it's separate bundle)
+- param3 : (default = false) recordEnable => when you want to save json files
+- param4 : (default = false) useMockEnable => when you want to use json files
 
-Create productFlavor named **mock**
-
-Add interceptor to your OkHttpClient.Builder when you build your retrofit API.
-
-Then when you use the application with build Variant mock and you use for example the WS declared like that in the ApiService of retrofit :
-```
-@GET("_ah/api/user/v1.0/getUser") Single<UserLoginDto> login(@Query("email") String email);
-```
-
-The MockNetworkInterceptor will try to find the file **GET-_ah-api-user-v1.0-getUser.json** in your app assets folder (app/src/main/assets).
-If not found, it execute the orginal network call.
+<span style="color:red">**you can't record and use mock at same times !!!**</span>
 
 
-generate Json file
+Mocks files nomenclature
+========================
+
+Example :
+
+network call GET https://mydomain.com/_ah/api/user/v1.0/getUser
+
+will create file named :
+
+GET-_ah-api-user-v1.0-getUser.json
+
+Record Json file
 ==================
 
-Add **ScrapingNetworkInterceptor** once to your OkHttpClient.Builder when you build your retrofit API.
+When setup mock lib with parameter recordEnable to **true** then every network calls in Json file to your internal app files folder :
 
-And then just go everywhere in app to call every WS, this will save every call of WS in Json file to your device app cache folder.
+![internal_app_files_folder](.repo/internal_app_files_folder.png)
 
-Then you can find and export all mocks files by exporting device folders :
 
-![export mocks cache Folder](.repo/export_cache_folder.png)
+Mock WS with json files
+=======================
 
-Then to use mock BuildVariant copy mocks folder to app assets folder like this :
+When setup mock lib with parameter useMockEnable to **true** then every network calls try to find the associated file (related by name) in the assets folder (and bundle folder if setup)
 
-![import mocks folder to assets Folder](.repo/import_to_assets_folder.png)
+![assets_folder](.repo/assets_folder.png)
+
+If not found it try to find the file in Internal app files folder
+
+If not found, it execute the orginal network call.

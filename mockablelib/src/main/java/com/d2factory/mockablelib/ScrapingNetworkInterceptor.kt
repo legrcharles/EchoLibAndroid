@@ -7,13 +7,12 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 
 /**
- * ScrapingNetworkInterceptor
- * Add **ScrapingNetworkInterceptor** once to your OkHttpClient.Builder when you build your retrofit API.
+ * This interceptor record every network calls in Json file to your internal app files folder.
  *
- * And then just go everywhere in app to call every WS, this will save every call of WS in Json file to your device app files folder.
- *
- * You can find and export all mocks files by exporting device folders
- * Then to use mock BuildVariant copy mocks folder to app assets folder
+ * Example :
+ * network call GET https://mydomain.com/_ah/api/user/v1.0/getUser
+ * try to find file named =
+ * GET-_ah-api-user-v1.0-getUser.json
  */
 open class ScrapingNetworkInterceptor(private val context: Context): Interceptor {
 
@@ -24,8 +23,8 @@ open class ScrapingNetworkInterceptor(private val context: Context): Interceptor
         val response = chain.proceed(request)
         val bodyString = response.body()?.string()
 
-        if (Config.recordEnable) {
-            val mockFile = Utils.getMockFile(context, request)
+        if (MockableConfig.recordEnable) {
+            val mockFile = Utils.getInternalAppMockFile(context, request)
             mockFile.writeText(bodyString ?: "")
             Log.i(tag, "create json mock at ${mockFile.path}")
         }
