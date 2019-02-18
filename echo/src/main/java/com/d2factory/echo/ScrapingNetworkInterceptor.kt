@@ -1,4 +1,4 @@
-package com.d2factory.mockablelib
+package com.d2factory.echo
 
 import android.content.Context
 import android.util.Log

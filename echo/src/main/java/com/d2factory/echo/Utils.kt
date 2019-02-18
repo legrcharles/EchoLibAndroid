@@ -1,4 +1,4 @@
-package com.d2factory.mockablelib
+package com.d2factory.echo
 
 import android.content.Context
 import okhttp3.Request
@@ -16,7 +16,7 @@ internal object Utils {
                 File.separator +
                 context.getString(R.string.app_name) +
                 File.separator +
-                MockableConfig.bundleMockFolder
+                EchoConfig.bundleMockFolder
 
         val baseFolder = File(baseFolderPath)
 
@@ -28,7 +28,7 @@ internal object Utils {
 
     fun getAssetMockFilePath(request: Request): String {
         val mockFileName = Utils.getMockFileNameFromRequest(request)
-        return "${MockableConfig.bundleName}${MockableConfig.mockFolderName}/$mockFileName"
+        return "${EchoConfig.bundleName}${EchoConfig.mockFolderName}/$mockFileName"
     }
 
     private fun getMockFileNameFromRequest(request: Request): String {

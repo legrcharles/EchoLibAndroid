@@ -1,4 +1,4 @@
-package com.d2factory.mockablelib
+package com.d2factory.echo
 
 import android.content.Context
 import okhttp3.*
@@ -28,7 +28,7 @@ open class MockNetworkInterceptor(private val context: Context) : Interceptor {
 
             json = getMockFromAssetsFolder(request)
 
-            if (MockableConfig.overrideWithAssetsEnable && json == null) {
+            if (EchoConfig.overrideWithAssetsEnable && json == null) {
                 json = getMockFromInternalAppFolder(request)
             }
 

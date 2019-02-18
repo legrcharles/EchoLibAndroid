@@ -1,13 +1,13 @@
-package com.d2factory.mockablelib
+package com.d2factory.echo
 
 import android.content.Context
 import okhttp3.OkHttpClient
 import java.io.File
 
-object MockableConfig {
+object EchoConfig {
 
     /**
-     * Setup the mockable lib with :
+     * Setup the echo lib with :
      * bundleName => record/read in separate mock folder (for example record json files for user1 in bundle user1 and then user2 in bundle user2)
      * recordEnable => when you want to save json files
      * useMockEnable => when you want to use json files
@@ -15,7 +15,7 @@ object MockableConfig {
      * /!\ you can't record and use mock at same times !!!
      */
     fun OkHttpClient.Builder.setupMock(context: Context, bundleName: String = "", recordEnable: Boolean = false, useMockEnable: Boolean = false) {
-        MockableConfig.bundleName = bundleName
+        EchoConfig.bundleName = bundleName
 
         if (useMockEnable && recordEnable) throw Exception("Mockable Lib can't have useMockEnable and recordEnable to true")
 

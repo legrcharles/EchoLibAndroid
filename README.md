@@ -1,16 +1,16 @@
-# ddf-mockablelib-android
+# ddf-echo-android
 
-## add mockablelib to your app
+## add echo to your app
 
 in your settings.gradle add
 ```
-include ':mockablelib'
-project(':mockablelib').projectDir = new File(settingsDir, 'absolute/or/relative/path/to/mockablelib')
+include ':echo'
+project(':echo').projectDir = new File(settingsDir, 'absolute/or/relative/path/to/mockablelib')
 ```
 
 then in your build.gradle (app) in section *dependencies* add this line 
 ```
-implementation project(':mockablelib') 
+implementation project(':echo')
 ```
 
 **use Gradle Sync**
@@ -50,7 +50,7 @@ GET-_ah-api-user-v1.0-getUser.json
 Record Json file
 ==================
 
-When setup mock lib with parameter recordEnable to **true** then every network calls in Json file to your internal app files folder :
+When setup echo lib with parameter recordEnable to **true** then every network calls in Json file to your internal app files folder :
 
 ![internal_app_files_folder](.repo/internal_app_files_folder.png)
 
@@ -58,7 +58,7 @@ When setup mock lib with parameter recordEnable to **true** then every network c
 Mock WS with json files
 =======================
 
-When setup mock lib with parameter useMockEnable to **true** then every network calls try to find the associated file (related by name) in the assets folder (and bundle folder if setup)
+When setup echo lib with parameter useMockEnable to **true** then every network calls try to find the associated file (related by name) in the assets folder (and bundle folder if setup)
 
 ![assets_folder](.repo/assets_folder.png)
 

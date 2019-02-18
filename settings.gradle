@@ -1,1 +1,1 @@
-include ':mockablelib'
+include ':echo'
