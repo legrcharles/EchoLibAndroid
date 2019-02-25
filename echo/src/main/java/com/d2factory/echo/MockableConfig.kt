@@ -9,21 +9,16 @@ object EchoConfig {
     /**
      * Setup the echo lib with :
      * bundleName => record/read in separate mock folder (for example record json files for user1 in bundle user1 and then user2 in bundle user2)
-     * recordEnable => when you want to save json files
-     * useMockEnable => when you want to use json files
-     *
-     * /!\ you can't record and use mock at same times !!!
+     * type RECORDING => when you want to save json files
+     * type MOCK_RESPONSE => when you want to use json files
      */
-    fun OkHttpClient.Builder.setupMock(context: Context, bundleName: String = "", recordEnable: Boolean = false, useMockEnable: Boolean = false) {
+    fun OkHttpClient.Builder.setupMock(context: Context, bundleName: String = "", type: EchoConfigType = EchoConfigType.NONE) {
         EchoConfig.bundleName = bundleName
 
-        if (useMockEnable && recordEnable) throw Exception("Mockable Lib can't have useMockEnable and recordEnable to true")
-
-        if(useMockEnable) {
-            this.addInterceptor(MockNetworkInterceptor(context))
-        }
-        if(recordEnable) {
-            this.addInterceptor(ScrapingNetworkInterceptor(context))
+        when (type) {
+            EchoConfigType.RECORDING -> this.addInterceptor(ScrapingNetworkInterceptor(context))
+            EchoConfigType.MOCK_RESPONSE -> this.addInterceptor(MockNetworkInterceptor(context))
+            EchoConfigType.NONE -> {}
         }
     }
 
@@ -43,4 +38,10 @@ object EchoConfig {
 
     // Try to get mock file in assets folder before to internal app files folder
     var overrideWithAssetsEnable = true
+}
+
+enum class EchoConfigType {
+    RECORDING,
+    MOCK_RESPONSE,
+    NONE
 }

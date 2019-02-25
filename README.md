@@ -24,17 +24,13 @@ Config the lib
 val okHttpBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
 okHttpBuilder.setupMock(applicationContext,
        "bundleName",
-       true,
-       false);
+       EchoConfigType.RECORDING);
 ```
 
 - param1 : the application context
 - param2 : (default = "") the bundle name => record/read in separate mock folder (for example record json files for user1 in separate bundle named user1 and then user2 in bundle user2, or each Retrofit client can have it's separate bundle)
-- param3 : (default = false) recordEnable => when you want to save json files
-- param4 : (default = false) useMockEnable => when you want to use json files
-
-<span style="color:red">**you can't record and use mock at same times !!!**</span>
-
+- param3 : (default = NONE) configType => RECORDING when you want to save json files
+                                          MOCK_RESPONSE when you want to use json files
 
 Mocks files nomenclature
 ========================
