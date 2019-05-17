@@ -1,16 +1,24 @@
 # ddf-echo-android
 
+### Mock easily your Android application
+
 ## add echo to your app
 
-in your settings.gradle add
+[ ![Download](https://api.bintray.com/packages/d2factory/Echo/com.d2factory.echo/images/download.svg?version=1.0.1) ](https://bintray.com/d2factory/Echo/com.d2factory.echo/1.0.1/link)
+
+Add it in your root build.gradle at the end of repositories:
 ```
-include ':echo'
-project(':echo').projectDir = new File(settingsDir, 'absolute/or/relative/path/to/mockablelib')
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
 ```
 
 then in your build.gradle (app) in section *dependencies* add this line 
 ```
-implementation project(':echo')
+implementation 'com.d2factory.echo:echo:1.0.1'
 ```
 
 **use Gradle Sync**
