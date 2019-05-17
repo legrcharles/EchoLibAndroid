@@ -16,38 +16,41 @@ import java.io.IOException
  */
 open class MockNetworkInterceptor(private val context: Context) : Interceptor {
 
-    private val mediaTypeJson = MediaType.parse("application/json")
+  private val mediaTypeJson = MediaType.parse("application/json")
 
-    @Throws(IOException::class)
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
+  @Throws(IOException::class)
+  override fun intercept(chain: Interceptor.Chain): Response {
+    val request = chain.request()
 
-        var json: String?
+    var json = getMockFromAssetsFolder(request)
 
-        kotlin.runCatching {
-
-            json = getMockFromAssetsFolder(request)
-
-            if (EchoConfig.overrideWithAssetsEnable && json == null) {
-                json = getMockFromInternalAppFolder(request)
-            }
-
-            return Response.Builder()
-                    .body(ResponseBody.create(mediaTypeJson, json))
-                    .request(chain.request())
-                    .message("")
-                    .protocol(Protocol.HTTP_2)
-                    .code(200)
-                    .build()
-        }
-
-
-        return chain.proceed(request)
+    if (EchoConfig.overrideWithAssetsEnable && json == null) {
+      json = getMockFromInternalAppFolder(request)
     }
 
-    private fun getMockFromInternalAppFolder(request: Request) =
-            Utils.getInternalAppMockFile(context, request).readBytes().toString(Charsets.UTF_8)
+    if (json == null) return chain.proceed(request)
 
-    private fun getMockFromAssetsFolder(request: Request) =
-            context.assets.open(Utils.getAssetMockFilePath(request)).readBytes().toString(Charsets.UTF_8)
+    return Response.Builder()
+        .body(ResponseBody.create(mediaTypeJson, json))
+        .request(chain.request())
+        .message("")
+        .protocol(Protocol.HTTP_2)
+        .code(200)
+        .build()
+  }
+
+  private fun getMockFromInternalAppFolder(request: Request) =
+      try {
+        Utils.getInternalAppMockFile(context, request).readBytes().toString(Charsets.UTF_8)
+      } catch (ex: Exception) {
+        null
+      }
+
+  private fun getMockFromAssetsFolder(request: Request) =
+      try {
+        context.assets.open(Utils.getAssetMockFilePath(request)).readBytes().toString(Charsets.UTF_8)
+      } catch (ex: Exception) {
+        null
+      }
+
 }
