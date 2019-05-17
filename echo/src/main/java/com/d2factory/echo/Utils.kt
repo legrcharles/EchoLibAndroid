@@ -7,8 +7,8 @@ import java.io.File
 internal object Utils {
 
     fun getInternalAppMockFile(context: Context, request: Request): File {
-        val baseFolder = Utils.getInternalAppMockDir(context)
-        return File(baseFolder, Utils.getMockFileNameFromRequest(request))
+        val baseFolder = getInternalAppMockDir(context)
+        return File(baseFolder, getMockFileNameFromRequest(request))
     }
 
     private fun getInternalAppMockDir(context: Context): File {
@@ -27,7 +27,7 @@ internal object Utils {
     }
 
     fun getAssetMockFilePath(request: Request): String {
-        val mockFileName = Utils.getMockFileNameFromRequest(request)
+        val mockFileName = getMockFileNameFromRequest(request)
         return "${EchoConfig.bundleName}${EchoConfig.mockFolderName}/$mockFileName"
     }
 
